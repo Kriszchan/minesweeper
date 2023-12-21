@@ -2,7 +2,6 @@
 using minesweeper;
 int x;
 int minedb;
-bool a;
 Console.CursorVisible = false;
 bool isgameover = false;
 Random r = new Random();
@@ -15,10 +14,9 @@ int[,] palyabelso = new int[palya.GetLength(0), palya.GetLength(1)];
 Console.Write("adja meg a bombák számát:");
 minedb = eredmeny.intcheck("db= ", 2*x);
 Console.Clear();
-eredmeny.palyagen(palya, mines);
-Console.Write("adja meg az első lépés koordinátáját pl: 9,6");
-int[] step = new int[2];
+eredmeny.palyakiir(palya, palyabelso);
 palyabelso = eredmeny.bombalerak(palyabelso, minedb);
 palyabelso = eredmeny.palyafeltolt(palyabelso);
+eredmeny.lepescheck(palya);
 
 

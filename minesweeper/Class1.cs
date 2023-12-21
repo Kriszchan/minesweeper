@@ -35,17 +35,19 @@ namespace minesweeper
             while (a == false || x > max);
             return x;
         }
-        public static int[] lepescheck(int[] step, char[,] palya)
+        public static int[] lepescheck(char[,] palya)
         {
-            bool a = false;
-            bool b = false;
+            bool a;
+            int[] step = new int [2];
+            bool b;
             do
             {
-                Console.Write("adja meg az első lépés koordinátáját pl: 9,6");
-                a = int.TryParse(Console.ReadLine().Split(",")[1], out step[0]);
-                b = int.TryParse(Console.ReadLine().Split(",")[1], out step[1]);
+                Console.Write("adja meg az első lépés koordinátáját pl: 9-6: ");
+                string [] c = Console.ReadLine().Split("-");
+                a = int.TryParse(c[0], out step[0]);
+                b = int.TryParse(c[1], out step[1]);
             }
-            while ((step[0] < 1 || step[0] > palya.GetLength(0) || step[1] < 1 || step[1] > palya.GetLength(1)) || (a == false || b == false));
+            while ((step[0] < 1 || step[0] > palya.GetLength(0)-1 || step[1] < 1 || step[1] > palya.GetLength(1)-1) || (a == false || b == false));
             return step;
         }
         public static int[,] palyafeltolt(int[,] palyabelso)
@@ -54,7 +56,7 @@ namespace minesweeper
             {
                 for (int j = 0; j < palyabelso.GetLength(1); j++)
                 {
-                    if (palyabelso[i, j] == 9)
+                    if (palyabelso[i, j] != 9)
                     {
                         for (int dx = -1; dx <= 1; dx++)
                         {
@@ -63,9 +65,9 @@ namespace minesweeper
                                 int x = i + dx;
                                 int y = j + dy;
 
-                                if (!(dx == 0 && dy == 0) && x >= 0 && x < palyabelso.GetLength(0) && y >= 0 && y < palyabelso.GetLength(1) && palyabelso[x, y] == 9)
+                                if ((dx != 0 || dy != 0) && x >= 0 && x < palyabelso.GetLength(0) && y >= 0 && y < palyabelso.GetLength(1) && palyabelso[x, y] == 9)
                                 {
-                                    palyabelso[x, y]++;
+                                    palyabelso[i, j]++;
                                 }
                             }
                         }
@@ -77,7 +79,7 @@ namespace minesweeper
 
         //gameplay
 
-        public static void palyakiir(char[,] palya, bool[,] mines)
+        public static void palyakiir(char[,] palya, int[,]belsopalya)
         {
             for (int i = 0; i < palya.GetLength(0) + 3; i++)
             {
@@ -112,7 +114,7 @@ namespace minesweeper
                     }
                     else if (i >= 2)
                     {
-                        if (palya[i,j] == '\0')
+                        if (palya[i-2,j] == '\0')
                         {
                             Console.Write(" - |");
                         }
@@ -125,33 +127,33 @@ namespace minesweeper
                 Console.Write("\n");
             }
         }
-        public static int[,] lepes(int[,] palyabelso, char[,] palya, int[]step)
-        {
-            if (palyabelso[step[0], step[1]] != 9) palya[step[0], step[1]] = (char)palyabelso[step[0], step[1]];
+        //public static int[,] lepes(int[,] palyabelso, char[,] palya, int[]step)
+        //{
+        //    if (palyabelso[step[0], step[1]] != 9) palya[step[0], step[1]] = (char)palyabelso[step[0], step[1]];
 
-            for (int i = 0; i < palyabelso.GetLength(0); i++)
-            {
-                for (int j = 0; j < palyabelso.GetLength(1); j++)
-                {
-                    if (i == step[0]&& j == step[1])
-                    {
-                        for (int dx = -1; dx <= 1; dx++)
-                        {
-                            for (int dy = -1; dy <= 1; dy++)
-                            {
-                                int x = i + dx;
-                                int y = j + dy;
+        //    for (int i = 0; i < palyabelso.GetLength(0); i++)
+        //    {
+        //        for (int j = 0; j < palyabelso.GetLength(1); j++)
+        //        {
+        //            if (i == step[0]&& j == step[1])
+        //            {
+        //                for (int dx = -1; dx <= 1; dx++)
+        //                {
+        //                    for (int dy = -1; dy <= 1; dy++)
+        //                    {
+        //                        int x = i + dx;
+        //                        int y = j + dy;
 
-                                if (!(dx == 0 && dy == 0) && x >= 0 && x < palyabelso.GetLength(0) && y >= 0 && y < palyabelso.GetLength(1) && palyabelso[x, y] == 0)
-                                {
+        //                        if (!(dx == 0 && dy == 0) && x >= 0 && x < palyabelso.GetLength(0) && y >= 0 && y < palyabelso.GetLength(1) && palyabelso[x, y] == 0)
+        //                        {
                                     
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
 
 }

@@ -3,7 +3,6 @@ using System.Security.Cryptography.X509Certificates;
 using minesweeper;
 int x;
 int minedb;
-Random r = new Random();
 Console.WriteLine("adja meg a pálya méretét: x*x maximum 50");
 x = eredmeny.intcheck("x= ", 50);
 cella [,] palya = new cella[x,x];
@@ -22,12 +21,11 @@ eredmeny.palyakiir(palya);
 palya = eredmeny.bombalerak(palya, minedb);
 palya= eredmeny.palyafeltolt(palya);
 if (eredmeny.gameplayloop(palya, minedb) == true)
+
 {
-    Console.WriteLine("gratulálunk ön nyert");
+    Console.WriteLine("Gratulálunk ön nyert");
 }
 else
 {
     Console.WriteLine("GAME OVER");
 }
-
-

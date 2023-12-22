@@ -167,16 +167,20 @@ namespace minesweeper
                 nemfelfedettdb = 0;
                 if (cellafelnyit(s[0], s[1], palya)) return false;
                 palyakiir(palya);
+
                 for (int i = 0; i < palya.GetLength(0); i++) 
                 {
                     for (int j = 0; j < palya.GetLength(1); j++)
                     {
+
                         if (!palya[i,j].nyitott)
+
                         {
                             nemfelfedettdb++;                            
                         }
                     }
                 }
+
                 if (nemfelfedettdb == minedb)
                 { 
                     return true;
@@ -184,6 +188,7 @@ namespace minesweeper
             }
         }
         public static bool cellafelnyit(int sx, int sy, cella[,] palya)
+
         {
             if (palya[sx, sy].belso != 9 && palya[sx, sy].belso != 0)
             {
@@ -193,6 +198,7 @@ namespace minesweeper
             }
             else if (palya[sx, sy].belso != 9)
             {
+
                 palya[sx, sy].nyitott = true;
                 if ((sx + 1 < palya.GetLength(0)) && !palya[sx + 1, sy].nyitott) cellafelnyit(sx + 1, sy, palya);
                 if ((sx + 1 < palya.GetLength(0) && sy + 1 < palya.GetLength(0)) && !palya[sx + 1, sy + 1].nyitott) cellafelnyit(sx + 1, sy + 1,palya);
@@ -201,6 +207,7 @@ namespace minesweeper
                 if ((sx - 1 >= 0 && sy + 1 < palya.GetLength(0)) && !palya[sx - 1, sy + 1].nyitott) cellafelnyit(sx - 1, sy + 1, palya);
                 if ((sx - 1 >= 0 && sy - 1 >= 0) && palya[sx - 1, sy].nyitott) cellafelnyit(sx - 1, sy - 1, palya);
                 if ((sx - 1 >= 0) && !palya[sx - 1, sy].nyitott) cellafelnyit(sx - 1, sy, palya);
+
                 return false;
             }
             else

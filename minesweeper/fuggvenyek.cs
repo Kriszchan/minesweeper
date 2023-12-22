@@ -159,33 +159,27 @@ namespace minesweeper
         public static bool gameplayloop(int[,] palyabelso, char[,] palya, bool[,] nyitott, int minedb)
         {
             int nemfelfedettdb = 0;
-            bool vesztett = false;
-            bool nyert = false;
             int[] s = new int[2];
-            while (nemfelfedettdb != minedb|| vesztett!= true|| nyert != true)
+            while (nemfelfedettdb != minedb)
             {
                 s = lepescheck(nyitott);
-                if (cellafelnyit(s[0], s[1], palyabelso, nyitott, palya, vesztett)) return false;
+                if (cellafelnyit(s[0], s[1], palyabelso, nyitott, palya)) return false;
                 palyakiir(palya, nyitott);
+                nemfelfedettdb= 0;
                 for (int i = 0; i < palya.GetLength(0); i++) 
                 {
                     for (int j = 0; j < palya.GetLength(1); j++)
                     {
-                        if (!nyitott[i,j])
+                        if (nyitott[i,j] == false)
                         {
                             nemfelfedettdb++;                            
                         }
                     }
                 }
-                if (nemfelfedettdb == minedb)
-                {
-                    nyert = true;
-                }
             }
-            if (vesztett == true) return false;
-            else return true;
+            return true;
         }
-        public static bool cellafelnyit(int sx, int sy, int[,] palyabelso, bool[,] nyitott, char[,] palya, bool vesztett)
+        public static bool cellafelnyit(int sx, int sy, int[,] palyabelso, bool[,] nyitott, char[,] palya)
         {
             if (palyabelso[sx, sy] != 9 && palyabelso[sx, sy] != 0)
             {
@@ -196,20 +190,18 @@ namespace minesweeper
             else if (palyabelso[sx, sy] != 9)
             {
                 nyitott[sx, sy] = true;
-                if ((sx + 1 < palyabelso.GetLength(0)) && !nyitott[sx + 1, sy]) cellafelnyit(sx + 1, sy, palyabelso, nyitott, palya, vesztett);
-                if ((sx + 1 < palyabelso.GetLength(0) && sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx + 1, sy + 1]) cellafelnyit(sx + 1, sy + 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx + 1 < palyabelso.GetLength(0) && sy - 1 >= 0) && !nyitott[sx + 1, sy - 1]) cellafelnyit(sx + 1, sy - 1, palyabelso, nyitott, palya, vesztett);
-                if ((sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx, sy + 1]) cellafelnyit(sx, sy + 1, palyabelso, nyitott, palya, vesztett);
-                if ((sy - 1 >= 0) && !nyitott[sx, sy - 1]) cellafelnyit(sx, sy - 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx - 1 >= 0 && sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx - 1, sy + 1]) cellafelnyit(sx - 1, sy + 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx - 1 >= 0 && sy - 1 >= 0) && !nyitott[sx - 1, sy - 1]) cellafelnyit(sx - 1, sy - 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx - 1 >= 0) && !nyitott[sx - 1, sy]) cellafelnyit(sx - 1, sy, palyabelso, nyitott, palya, vesztett);
+                if ((sx + 1 < palyabelso.GetLength(0)) && !nyitott[sx + 1, sy]) cellafelnyit(sx + 1, sy, palyabelso, nyitott, palya);
+                if ((sx + 1 < palyabelso.GetLength(0) && sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx + 1, sy + 1]) cellafelnyit(sx + 1, sy + 1, palyabelso, nyitott, palya);
+                if ((sx + 1 < palyabelso.GetLength(0) && sy - 1 >= 0) && !nyitott[sx + 1, sy - 1]) cellafelnyit(sx + 1, sy - 1, palyabelso, nyitott, palya);
+                if ((sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx, sy + 1]) cellafelnyit(sx, sy + 1, palyabelso, nyitott, palya);
+                if ((sy - 1 >= 0) && !nyitott[sx, sy - 1]) cellafelnyit(sx, sy - 1, palyabelso, nyitott, palya);
+                if ((sx - 1 >= 0 && sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx - 1, sy + 1]) cellafelnyit(sx - 1, sy + 1, palyabelso, nyitott, palya);
+                if ((sx - 1 >= 0 && sy - 1 >= 0) && !nyitott[sx - 1, sy - 1]) cellafelnyit(sx - 1, sy - 1, palyabelso, nyitott, palya);
+                if ((sx - 1 >= 0) && !nyitott[sx - 1, sy]) cellafelnyit(sx - 1, sy, palyabelso, nyitott, palya);
                 return false;
             }
             else
             {
-                vesztett = true;
-                Console.WriteLine("GAME OVER");
                 return true;
             } 
         }

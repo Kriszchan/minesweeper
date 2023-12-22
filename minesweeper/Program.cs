@@ -4,10 +4,6 @@ using minesweeper;
 int x;
 int minedb;
 Console.CursorVisible = false;
-cella c = new cella();
-bool isgamelost = false;
-bool isgamewon = false;
-Random r = new Random();
 Console.WriteLine("adja meg a pálya méretét: x*x maximum 50");
 x = eredmeny.intcheck("x= ", 50);
 char [,] palya = new char[x,x];
@@ -19,13 +15,11 @@ Console.Clear();
 eredmeny.palyakiir(palya, nyitott);
 palyabelso = eredmeny.bombalerak(palyabelso, minedb);
 palyabelso = eredmeny.palyafeltolt(palyabelso);
-if (eredmeny.gameplayloop(palyabelso, palya, nyitott, minedb) == true)
+if (eredmeny.gameplayloop(palyabelso, palya, nyitott, minedb))
 {
-    Console.WriteLine("gratulálunk ön nyert");
+    Console.WriteLine("Gratulálunk ön nyert");
 }
 else
 {
     Console.WriteLine("GAME OVER");
 }
-
-

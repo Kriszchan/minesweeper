@@ -98,51 +98,6 @@ namespace minesweeper
 
         public static void palyakiir(char[,] palya, bool[,] nyitott)
         {
-            //for (int i = 0; i < palya.GetLength(0) + 3; i++)
-            //{
-            //    if ((i > 1) && i != palya.GetLength(0) + 2)
-            //    {
-            //        if (i < 9 + 2) Console.Write($"{i - 1} ");
-            //        else Console.Write(i - 1);
-            //    }
-            //    else if (i == 1) Console.Write("  ");
-            //    if (i != 0 && i != palya.GetLength(0) + 2)
-            //    {
-            //        Console.Write("||");
-            //    }
-            //    else
-            //    {
-            //        Console.Write("   ");
-            //    }
-            //    for (int j = 0; j < palya.GetLength(1); j++)
-            //    {
-            //        if (i == 0)
-            //        {
-            //            Console.Write("====");
-            //        }
-            //        else if (i == palya.GetLength(0) + 2)
-            //        {
-            //            Console.Write("====");
-            //        }
-            //        else if (i == 1)
-            //        {
-            //            if (j < 9) Console.Write($" {j + 1} |");
-            //            else Console.Write($" {j + 1}|");
-            //        }
-            //        else if (i >= 2)
-            //        {
-            //            if (palya[i-2,j] == '\0')
-            //            {
-            //                Console.Write(" - |");
-            //            }
-            //            else
-            //            {
-            //                Console.Write($" {palya[i-2,j]} |");
-            //            }
-            //        }
-            //    }
-            //    Console.Write("\n");
-            //}
             Console.Write("    ");
             for (int i = 0; i < palya.GetLength(0); i++)
             {
@@ -207,16 +162,16 @@ namespace minesweeper
             bool vesztett = false;
             bool nyert = false;
             int[] s = new int[2];
-            while (nemfelfedettdb != minedb&& vesztett!= true&& nyert != true)
+            while (nemfelfedettdb != minedb|| vesztett!= true|| nyert != true)
             {
                 s = lepescheck(nyitott);
-                cellafelnyit(s[0],s[1], palyabelso, nyitott, palya, vesztett);
+                if (cellafelnyit(s[0], s[1], palyabelso, nyitott, palya, vesztett)) return false;
                 palyakiir(palya, nyitott);
                 for (int i = 0; i < palya.GetLength(0); i++) 
                 {
                     for (int j = 0; j < palya.GetLength(1); j++)
                     {
-                        if (palya[i, j] == '\0')
+                        if (!nyitott[i,j])
                         {
                             nemfelfedettdb++;                            
                         }
@@ -230,12 +185,13 @@ namespace minesweeper
             if (vesztett == true) return false;
             else return true;
         }
-        public static void cellafelnyit(int sx, int sy, int[,] palyabelso, bool[,] nyitott, char[,] palya, bool vesztett)
+        public static bool cellafelnyit(int sx, int sy, int[,] palyabelso, bool[,] nyitott, char[,] palya, bool vesztett)
         {
             if (palyabelso[sx, sy] != 9 && palyabelso[sx, sy] != 0)
             {
                 palya[sx, sy] = (char)palyabelso[sx, sy];
                 nyitott[sx, sy] = true;
+                return false;
             }
             else if (palyabelso[sx, sy] != 9)
             {
@@ -248,8 +204,14 @@ namespace minesweeper
                 if ((sx - 1 >= 0 && sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx - 1, sy + 1]) cellafelnyit(sx - 1, sy + 1, palyabelso, nyitott, palya, vesztett);
                 if ((sx - 1 >= 0 && sy - 1 >= 0) && !nyitott[sx - 1, sy - 1]) cellafelnyit(sx - 1, sy - 1, palyabelso, nyitott, palya, vesztett);
                 if ((sx - 1 >= 0) && !nyitott[sx - 1, sy]) cellafelnyit(sx - 1, sy, palyabelso, nyitott, palya, vesztett);
+                return false;
             }
-            else vesztett = true;
+            else
+            {
+                vesztett = true;
+                Console.WriteLine("GAME OVER");
+                return true;
+            } 
         }
     } 
 }

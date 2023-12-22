@@ -2,8 +2,10 @@
 using minesweeper;
 int x;
 int minedb;
+int[] step = new int[2];
 Console.CursorVisible = false;
-bool isgameover = false;
+bool isgamelost = false;
+bool isgamewon = false;
 Random r = new Random();
 Console.WriteLine("adja meg a pálya méretét: x*x maximum 50");
 x = eredmeny.intcheck("x= ", 50);
@@ -17,6 +19,5 @@ Console.Clear();
 eredmeny.palyakiir(palya, palyabelso);
 palyabelso = eredmeny.bombalerak(palyabelso, minedb);
 palyabelso = eredmeny.palyafeltolt(palyabelso);
-eredmeny.lepescheck(palya);
 
 

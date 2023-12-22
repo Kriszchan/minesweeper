@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.ComponentModel.Design;
+using System.Security.Cryptography.X509Certificates;
 using minesweeper;
 int x;
 int minedb;
@@ -16,8 +17,16 @@ int[,] palyabelso = new int[palya.GetLength(0), palya.GetLength(1)];
 Console.Write("adja meg a bombák számát:");
 minedb = eredmeny.intcheck("db= ", 2*x);
 Console.Clear();
-eredmeny.palyakiir(palya, palyabelso);
+eredmeny.palyakiir(palya, nyitott);
 palyabelso = eredmeny.bombalerak(palyabelso, minedb);
 palyabelso = eredmeny.palyafeltolt(palyabelso);
+if (eredmeny.gameplayloop(palyabelso, palya, nyitott, minedb) == true)
+{
+    Console.WriteLine("gratulálunk ön nyert");
+}
+else
+{
+    Console.WriteLine("GAME OVER");
+}
 
 

@@ -50,8 +50,10 @@ namespace minesweeper
                 string [] c = Console.ReadLine().Split("-");
                 try
                 {
-                    a = int.TryParse(c[0], out sx);
-                    b = int.TryParse(c[1], out sy);
+                    a = int.TryParse(c[0], out sy);
+                    b = int.TryParse(c[1], out sx);
+                    sx--;
+                    sy--;
                 }
                 catch (Exception)
                 {
@@ -60,7 +62,7 @@ namespace minesweeper
                 }
 
             }
-            while (((sx < 1 || sx > nyitott.GetLength(0)-1 || sy < 1 || sy > nyitott.GetLength(1)-1) || (a == false || b == false))&& nyitott[sx, sy] == false);
+            while (((sx < 0 || sx > nyitott.GetLength(0)-1 || sy < 0 || sy > nyitott.GetLength(1)-1) || (a == false || b == false))&& nyitott[sx, sy] == false);
             d[0] = sx;
             d[1] = sy;
             return d;
@@ -94,52 +96,109 @@ namespace minesweeper
 
         //gameplay
 
-        public static void palyakiir(char[,] palya, int[,]belsopalya)
+        public static void palyakiir(char[,] palya, bool[,] nyitott)
         {
-            for (int i = 0; i < palya.GetLength(0) + 3; i++)
+            //for (int i = 0; i < palya.GetLength(0) + 3; i++)
+            //{
+            //    if ((i > 1) && i != palya.GetLength(0) + 2)
+            //    {
+            //        if (i < 9 + 2) Console.Write($"{i - 1} ");
+            //        else Console.Write(i - 1);
+            //    }
+            //    else if (i == 1) Console.Write("  ");
+            //    if (i != 0 && i != palya.GetLength(0) + 2)
+            //    {
+            //        Console.Write("||");
+            //    }
+            //    else
+            //    {
+            //        Console.Write("   ");
+            //    }
+            //    for (int j = 0; j < palya.GetLength(1); j++)
+            //    {
+            //        if (i == 0)
+            //        {
+            //            Console.Write("====");
+            //        }
+            //        else if (i == palya.GetLength(0) + 2)
+            //        {
+            //            Console.Write("====");
+            //        }
+            //        else if (i == 1)
+            //        {
+            //            if (j < 9) Console.Write($" {j + 1} |");
+            //            else Console.Write($" {j + 1}|");
+            //        }
+            //        else if (i >= 2)
+            //        {
+            //            if (palya[i-2,j] == '\0')
+            //            {
+            //                Console.Write(" - |");
+            //            }
+            //            else
+            //            {
+            //                Console.Write($" {palya[i-2,j]} |");
+            //            }
+            //        }
+            //    }
+            //    Console.Write("\n");
+            //}
+            Console.Write("    ");
+            for (int i = 0; i < palya.GetLength(0); i++)
             {
-                if ((i > 1) && i != palya.GetLength(0) + 2)
+                if (i + 1 < 9)
                 {
-                    if (i < 9 + 2) Console.Write($"{i - 1} ");
-                    else Console.Write(i - 1);
-                }
-                else if (i == 1) Console.Write("  ");
-                if (i != 0 && i != palya.GetLength(0) + 2)
-                {
-                    Console.Write("||");
+                    Console.Write(i + 1 + "  ");
                 }
                 else
                 {
-                    Console.Write("   ");
+                    Console.Write(i + 1 + " ");
                 }
+            }
+            Console.Write("\n");
+            for (int i = 0; i < palya.GetLength(0); i++)
+            {
                 for (int j = 0; j < palya.GetLength(1); j++)
                 {
-                    if (i == 0)
+                    if (nyitott[i, j])
                     {
-                        Console.Write("====");
-                    }
-                    else if (i == palya.GetLength(0) + 2)
-                    {
-                        Console.Write("====");
-                    }
-                    else if (i == 1)
-                    {
-                        if (j < 9) Console.Write($" {j + 1} |");
-                        else Console.Write($" {j + 1}|");
-                    }
-                    else if (i >= 2)
-                    {
-                        if (palya[i-2,j] == '\0')
+                        if (j == 0)
                         {
-                            Console.Write(" - |");
+                            if (i < 9)
+                            {
+                                Console.Write($"{i + 1} | {(int)palya[i, j]}  ");
+                            }
+                            else
+                            {
+                                Console.Write($"{i + 1}| {(int)palya[i, j]}  ");
+                            }
                         }
                         else
                         {
-                            Console.Write($" {palya[i,j]} |");
+                            Console.Write((int)palya[i, j] + "  ");
                         }
                     }
+                    else
+                    {
+                        if (j == 0)
+                        {
+                            if (i < 9)
+                            {
+                                Console.Write($"{i + 1} | -  ");
+                            }
+                            else
+                            {
+                                Console.Write($"{i + 1}| -  ");
+                            }
+                        }
+                        else
+                        {
+                            Console.Write("-  ");
+                        }
+                    }
+                
                 }
-                Console.Write("\n");
+                Console.WriteLine();
             }
         }
         public static bool gameplayloop(int[,] palyabelso, char[,] palya, bool[,] nyitott, int minedb)
@@ -148,11 +207,11 @@ namespace minesweeper
             bool vesztett = false;
             bool nyert = false;
             int[] s = new int[2];
-            while (nemfelfedettdb != minedb|| vesztett!= true|| nyert != true)
+            while (nemfelfedettdb != minedb&& vesztett!= true&& nyert != true)
             {
                 s = lepescheck(nyitott);
                 cellafelnyit(s[0],s[1], palyabelso, nyitott, palya, vesztett);
-                palyakiir(palya, palyabelso);
+                palyakiir(palya, nyitott);
                 for (int i = 0; i < palya.GetLength(0); i++) 
                 {
                     for (int j = 0; j < palya.GetLength(1); j++)

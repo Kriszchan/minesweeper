@@ -14,16 +14,16 @@ namespace minesweeper
     public class eredmeny
     {
          //alap
-        public static int[,] bombalerak(int[,] palyabelso, int minesdb)
+        public static cella[,] bombalerak(cella[,] palya, int minesdb)
         {
             Random r = new Random();
             int x = minesdb;
             while (x > 0)
             {
-                palyabelso[r.Next(palyabelso.GetLength(0)), r.Next(palyabelso.GetLength(1))] = 9;
+                palya[r.Next(palya.GetLength(0)), r.Next(palya.GetLength(1))].belso = 9;
                 x -= 1;
             }
-            return palyabelso;
+            return palya;
         }
         public static int intcheck(string szveg, int max)
         {
@@ -37,7 +37,7 @@ namespace minesweeper
             while (a == false || x > max);
             return x;
         }
-        public static int[] lepescheck(bool[,] nyitott)
+        public static int[] lepescheck(cella[,] palya)
         {
             bool a = false;
             int sx = 0;
@@ -62,18 +62,18 @@ namespace minesweeper
                 }
 
             }
-            while (((sx < 0 || sx > nyitott.GetLength(0)-1 || sy < 0 || sy > nyitott.GetLength(1)-1) || (a == false || b == false))&& nyitott[sx, sy] == false);
+            while (((sx < 0 || sx > palya.GetLength(0)-1 || sy < 0 || sy > palya.GetLength(1)-1) || (a == false || b == false))&& palya[sx, sy].nyitott == false);
             d[0] = sx;
             d[1] = sy;
             return d;
         }
-        public static int[,] palyafeltolt(int[,] palyabelso)
+        public static cella[,] palyafeltolt(cella[,] palya)
         {
-            for (int i = 0; i < palyabelso.GetLength(0); i++)
+            for (int i = 0; i < palya.GetLength(0); i++)
             {
-                for (int j = 0; j < palyabelso.GetLength(1); j++)
+                for (int j = 0; j < palya.GetLength(1); j++)
                 {
-                    if (palyabelso[i, j] != 9)
+                    if (palya[i, j].belso != 9)
                     {
                         for (int dx = -1; dx <= 1; dx++)
                         {
@@ -82,22 +82,23 @@ namespace minesweeper
                                 int x = i + dx;
                                 int y = j + dy;
 
-                                if ((dx != 0 || dy != 0) && x >= 0 && x < palyabelso.GetLength(0) && y >= 0 && y < palyabelso.GetLength(1) && palyabelso[x, y] == 9)
+                                if ((dx != 0 || dy != 0) && x >= 0 && x < palya.GetLength(0) && y >= 0 && y < palya.GetLength(1) && palya[x, y].belso == 9)
                                 {
-                                    palyabelso[i, j]++;
+                                    palya[i, j].belso++;
                                 }
                             }
                         }
                     }
                 }
             }
-            return palyabelso;
+            return palya;
         }
 
         //gameplay
 
-        public static void palyakiir(char[,] palya, bool[,] nyitott)
+        public static void palyakiir(cella[,] palya)
         {
+            Console.Clear();
             Console.Write("    ");
             for (int i = 0; i < palya.GetLength(0); i++)
             {
@@ -115,22 +116,22 @@ namespace minesweeper
             {
                 for (int j = 0; j < palya.GetLength(1); j++)
                 {
-                    if (nyitott[i, j])
+                    if (palya[i, j].nyitott)
                     {
                         if (j == 0)
                         {
                             if (i < 9)
                             {
-                                Console.Write($"{i + 1} | {(int)palya[i, j]}  ");
+                                Console.Write($"{i + 1} | {(int)palya[i, j].kiir}  ");
                             }
                             else
                             {
-                                Console.Write($"{i + 1}| {(int)palya[i, j]}  ");
+                                Console.Write($"{i + 1}| {(int)palya[i, j].kiir}  ");
                             }
                         }
                         else
                         {
-                            Console.Write((int)palya[i, j] + "  ");
+                            Console.Write((int)palya[i, j].kiir + "  ");
                         }
                     }
                     else
@@ -156,60 +157,54 @@ namespace minesweeper
                 Console.WriteLine();
             }
         }
-        public static bool gameplayloop(int[,] palyabelso, char[,] palya, bool[,] nyitott, int minedb)
+        public static bool gameplayloop(cella[,] palya,int minedb)
         {
             int nemfelfedettdb = 0;
-            bool vesztett = false;
-            bool nyert = false;
             int[] s = new int[2];
-            while (nemfelfedettdb != minedb|| vesztett!= true|| nyert != true)
+            while (true)
             {
-                s = lepescheck(nyitott);
-                if (cellafelnyit(s[0], s[1], palyabelso, nyitott, palya, vesztett)) return false;
-                palyakiir(palya, nyitott);
+                s = lepescheck(palya);
+                nemfelfedettdb = 0;
+                if (cellafelnyit(s[0], s[1], palya)) return false;
+                palyakiir(palya);
                 for (int i = 0; i < palya.GetLength(0); i++) 
                 {
                     for (int j = 0; j < palya.GetLength(1); j++)
                     {
-                        if (!nyitott[i,j])
+                        if (!palya[i,j].nyitott)
                         {
                             nemfelfedettdb++;                            
                         }
                     }
                 }
                 if (nemfelfedettdb == minedb)
-                {
-                    nyert = true;
+                { 
+                    return true;
                 }
             }
-            if (vesztett == true) return false;
-            else return true;
         }
-        public static bool cellafelnyit(int sx, int sy, int[,] palyabelso, bool[,] nyitott, char[,] palya, bool vesztett)
+        public static bool cellafelnyit(int sx, int sy, cella[,] palya)
         {
-            if (palyabelso[sx, sy] != 9 && palyabelso[sx, sy] != 0)
+            if (palya[sx, sy].belso != 9 && palya[sx, sy].belso != 0)
             {
-                palya[sx, sy] = (char)palyabelso[sx, sy];
-                nyitott[sx, sy] = true;
+                palya[sx, sy].kiir = (char)palya[sx, sy].belso;
+                palya[sx, sy].nyitott = true;
                 return false;
             }
-            else if (palyabelso[sx, sy] != 9)
+            else if (palya[sx, sy].belso != 9)
             {
-                nyitott[sx, sy] = true;
-                if ((sx + 1 < palyabelso.GetLength(0)) && !nyitott[sx + 1, sy]) cellafelnyit(sx + 1, sy, palyabelso, nyitott, palya, vesztett);
-                if ((sx + 1 < palyabelso.GetLength(0) && sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx + 1, sy + 1]) cellafelnyit(sx + 1, sy + 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx + 1 < palyabelso.GetLength(0) && sy - 1 >= 0) && !nyitott[sx + 1, sy - 1]) cellafelnyit(sx + 1, sy - 1, palyabelso, nyitott, palya, vesztett);
-                if ((sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx, sy + 1]) cellafelnyit(sx, sy + 1, palyabelso, nyitott, palya, vesztett);
-                if ((sy - 1 >= 0) && !nyitott[sx, sy - 1]) cellafelnyit(sx, sy - 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx - 1 >= 0 && sy + 1 < palyabelso.GetLength(0)) && !nyitott[sx - 1, sy + 1]) cellafelnyit(sx - 1, sy + 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx - 1 >= 0 && sy - 1 >= 0) && !nyitott[sx - 1, sy - 1]) cellafelnyit(sx - 1, sy - 1, palyabelso, nyitott, palya, vesztett);
-                if ((sx - 1 >= 0) && !nyitott[sx - 1, sy]) cellafelnyit(sx - 1, sy, palyabelso, nyitott, palya, vesztett);
+                palya[sx, sy].nyitott = true;
+                if ((sx + 1 < palya.GetLength(0)) && !palya[sx + 1, sy].nyitott) cellafelnyit(sx + 1, sy, palya);
+                if ((sx + 1 < palya.GetLength(0) && sy + 1 < palya.GetLength(0)) && !palya[sx + 1, sy + 1].nyitott) cellafelnyit(sx + 1, sy + 1,palya);
+                if ((sx + 1 < palya.GetLength(0) && sy - 1 >= 0) && !palya[sx + 1, sy - 1].nyitott) cellafelnyit(sx + 1, sy - 1, palya);
+                if ((sy + 1 < palya.GetLength(0)) && !palya[sx, sy + 1].nyitott) cellafelnyit(sx, sy + 1, palya);
+                if ((sx - 1 >= 0 && sy + 1 < palya.GetLength(0)) && !palya[sx - 1, sy + 1].nyitott) cellafelnyit(sx - 1, sy + 1, palya);
+                if ((sx - 1 >= 0 && sy - 1 >= 0) && palya[sx - 1, sy].nyitott) cellafelnyit(sx - 1, sy - 1, palya);
+                if ((sx - 1 >= 0) && !palya[sx - 1, sy].nyitott) cellafelnyit(sx - 1, sy, palya);
                 return false;
             }
             else
             {
-                vesztett = true;
-                Console.WriteLine("GAME OVER");
                 return true;
             } 
         }

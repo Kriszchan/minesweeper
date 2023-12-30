@@ -11,14 +11,12 @@ namespace minesweeper
         public int belso { get; set; }
         public char kiir { get; set; }
         public bool nyitott { get; set; }
-        public string szin { get; set; }
 
         public cella()
         {
             belso = 0;
             kiir = '\0';
             nyitott = false;
-            szin = "white";
         }
     }
 }

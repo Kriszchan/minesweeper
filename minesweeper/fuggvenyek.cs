@@ -4,6 +4,8 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +36,7 @@ namespace minesweeper
                 Console.Write(szveg);
                 a = int.TryParse(Console.ReadLine(), out x);
             }
-            while (a == false || x > max);
+            while (a == false || x > max || 0>x );
             return x;
         }
         public static int[] lepescheck(cella[,] palya)
@@ -62,7 +64,7 @@ namespace minesweeper
                 }
 
             }
-            while (((sx < 0 || sx > palya.GetLength(0)-1 || sy < 0 || sy > palya.GetLength(1)-1) || (a == false || b == false))&& palya[sx, sy].nyitott == false);
+            while (((sx < 0 || sx >= palya.GetLength(0) || sy < 0 || sy >= palya.GetLength(1)) || (a == false || b == false)) && palya[sx, sy].nyitott == false);
             d[0] = sx;
             d[1] = sy;
             return d;
@@ -168,7 +170,8 @@ namespace minesweeper
                 if (cellafelnyit(s[0], s[1], palya)) return false;
                 palyakiir(palya);
 
-                for (int i = 0; i < palya.GetLength(0); i++) 
+                for (
+                    int i = 0; i < palya.GetLength(0); i++) 
                 {
                     for (int j = 0; j < palya.GetLength(1); j++)
                     {
@@ -185,6 +188,7 @@ namespace minesweeper
                 { 
                     return true;
                 }
+                save(palya);
             }
         }
         public static bool cellafelnyit(int sx, int sy, cella[,] palya)
@@ -214,6 +218,64 @@ namespace minesweeper
             {
                 return true;
             } 
+        }
+
+
+         //mentes betoltes
+        public static void save(cella[,] palya)
+        {
+            StreamWriter swk = new StreamWriter("savekiir.txt");
+            StreamWriter swb = new StreamWriter("savebelso.txt");
+            StreamWriter swny = new StreamWriter("savenyitott.txt");
+            for (int i = 0; i < palya.GetLength(0); i++)
+            {
+                for (int j = 0; j < palya.GetLength(1); j++)
+                {
+                    swk.Write((int)palya[i, j].kiir + ",");
+                    swb.Write(palya[i, j].belso + ",");
+                    if (palya[i, j].nyitott == true)
+                    {
+                        swny.Write("1,");
+                    }
+                    else
+                    {
+                        swny.Write("0,");
+                    }
+                }
+                swk.Write('\n');
+                swb.Write('\n');
+                swny.Write('\n');
+            }
+            swk.Close();
+            swb.Close();
+            swny.Close();
+        }
+        public static cella[,] load()
+        {
+            string[] savekiir = File.ReadAllLines("savekiir.txt");
+            string[] savebelso = File.ReadAllLines("savebelso.txt");
+            string[] savenyitott = File.ReadAllLines("savenyitott.txt");
+            int x = savekiir.Length;
+            cella[,] palya = new cella[x, x];
+            for (int i = 0; i < x; i++)
+            {
+                for (int j = 0; j < x; j++)
+                {
+                    palya[i, j] = new cella();
+                    int ascii = int.Parse(savekiir[i].Split(",")[j]);
+                    palya[i, j].kiir = Convert.ToChar(ascii);
+                    palya[i, j].belso = int.Parse(savebelso[i].Split(",")[j]);
+                    if (savenyitott[i].Split(",")[j] == "1")
+                    {
+                        palya[i, j].nyitott = true;
+                    }
+                    else
+                    {
+                        palya[i,j].nyitott = false;
+                    }
+                }
+            }
+            return palya;
         }
     } 
 }
